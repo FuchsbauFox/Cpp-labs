@@ -50,9 +50,41 @@ Polynomial& Polynomial::operator=(const Polynomial& other) {
 }
 
 bool Polynomial::operator==(const Polynomial& other) const {
-	if (min_ != other.min_ || max_ != other.max_)
-		return false;
-	for (int i = 0; i < max_ - min_ + 1; ++i) {
+	int thisMin = min_;
+	int thisMax = max_;
+	std::vector<int>::const_iterator itThisBegin = coefficients_.begin();
+	std::vector<int>::const_iterator itThisEnd = coefficients_.end() - 1;
+	int otherMin = other.min_;
+	int otherMax = other.max_;
+	std::vector<int>::const_iterator itOtherBegin = other.coefficients_.begin();
+	std::vector<int>::const_iterator itOtherEnd = other.coefficients_.end() - 1;
+	while (thisMin < otherMin) {
+		if (*itThisBegin != 0)
+			return false;
+		thisMin++;
+		itThisBegin++;
+	}
+	while (otherMin < thisMin) {
+		if (*itOtherBegin != 0)
+			return false;
+		otherMin++;
+		itOtherBegin++;
+	}
+
+	while (thisMax > otherMax) {
+		if (*itThisEnd != 0)
+			return false;
+		thisMax--;
+		itThisEnd--;
+	}
+	while (otherMax > thisMax) {
+		if (*itOtherEnd != 0)
+			return false;
+		otherMax--;
+		itOtherEnd--;
+	}
+
+	for (int i = 0; i < thisMin - thisMax + 1; ++i) {
 		if (coefficients_[i] != other.coefficients_[i])
 			return false;
 	}

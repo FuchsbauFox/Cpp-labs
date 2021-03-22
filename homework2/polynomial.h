@@ -38,6 +38,8 @@ public:
 	int& operator[](const int);
 	int operator[](const int) const;
 
+	friend Polynomial operator-(Polynomial);
+
 	friend std::stringstream& operator<<(std::stringstream&, const Polynomial&);
 	friend std::ifstream& operator>>(std::ifstream&, Polynomial&);
 
