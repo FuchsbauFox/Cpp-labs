@@ -134,6 +134,7 @@ Polynomial Polynomial::operator-(const Polynomial& other) const {
 }
 
 Polynomial& Polynomial::operator*=(const int number) {
+	//todo for_each
 	for (auto& coef : coefficients_)
 		coef *= number;
 	return *this;
@@ -275,6 +276,7 @@ std::ifstream& operator>>(std::ifstream& in, Polynomial& object) {
 	return in;
 }
 
+//todo get O(n)
 double Polynomial::get(const int x) const {
 	double res = 0;
 	int power = min_;

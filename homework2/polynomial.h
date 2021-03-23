@@ -8,6 +8,7 @@ class Polynomial {
 private:
 	int min_;
 	int max_;
+	//todo pointer to vector
 	std::vector<int> coefficients_;
 public:
 	Polynomial();
@@ -26,6 +27,7 @@ public:
 	Polynomial& operator*=(const int);
 	Polynomial operator*(const int) const;
 	friend Polynomial operator*(const int, const Polynomial);
+	//todo const int -> int
 	Polynomial& operator/=(const int);
 	Polynomial operator/(const int) const;
 
@@ -36,6 +38,7 @@ public:
 	int& operator[](const int);
 	int operator[](const int) const;
 
+	//todo const&
 	friend Polynomial operator-(Polynomial);
 
 	friend std::stringstream& operator<<(std::stringstream&, const Polynomial&);
