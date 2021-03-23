@@ -9,8 +9,6 @@ private:
 	int min_;
 	int max_;
 	std::vector<int> coefficients_;
-
-	void coefCorrection();
 public:
 	Polynomial();
 	explicit Polynomial(int, int, int*);

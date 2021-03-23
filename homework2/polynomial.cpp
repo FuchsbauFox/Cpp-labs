@@ -21,23 +21,6 @@ Polynomial::Polynomial(const Polynomial& other)
 		coefficients_.push_back(coef);
 }
 
-void Polynomial::coefCorrection() {
-	if (min_ == max_)
-		return;
-	std::vector<int>::iterator it = coefficients_.begin();
-	while (*it == 0) {
-		coefficients_.erase(it);
-		it = coefficients_.begin();
-		min_++;
-	}
-	it = coefficients_.end() - 1;
-	while (*it == 0) {
-		coefficients_.erase(it);
-		it = coefficients_.end() - 1;
-		max_--;
-	}
-}
-
 Polynomial& Polynomial::operator=(const Polynomial& other) {
 	if (&other != this) {
 		min_ = other.min_;
@@ -84,9 +67,10 @@ bool Polynomial::operator==(const Polynomial& other) const {
 		itOtherEnd--;
 	}
 
-	for (int i = 0; i < thisMin - thisMax + 1; ++i) {
-		if (coefficients_[i] != other.coefficients_[i])
+	for (; itThisBegin != itThisEnd; ++itThisBegin) {
+		if (*itThisBegin != *itOtherBegin)
 			return false;
+		itOtherBegin++;
 	}
 	return true;
 }
@@ -140,7 +124,6 @@ Polynomial& Polynomial::operator-=(const Polynomial& other) {
 	*this *= -1;
 	*this += other;
 	*this *= -1;
-	coefCorrection();
 	return *this;
 }
 
@@ -153,7 +136,6 @@ Polynomial Polynomial::operator-(const Polynomial& other) const {
 Polynomial& Polynomial::operator*=(const int number) {
 	for (auto& coef : coefficients_)
 		coef *= number;
-	coefCorrection();
 	return *this;
 }
 
@@ -171,7 +153,6 @@ Polynomial& Polynomial::operator/=(const int number) {
 	for (auto& coef : coefficients_) {
 		coef /= number;
 	}
-	coefCorrection();
 	return *this;
 }
 
