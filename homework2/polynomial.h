@@ -1,5 +1,5 @@
-#include<vector>
-#include <string>
+#include <sstream>
+#include <fstream>
 
 #ifndef POLYNOMIAL_H
 #define POLYNOMIAL_H
@@ -8,8 +8,9 @@ class Polynomial {
 private:
 	int min_;
 	int max_;
-	//todo pointer to vector
-	std::vector<int> coefficients_;
+	//fixed pointer to vector
+	int* coefficients_;
+
 public:
 	Polynomial();
 	explicit Polynomial(int, int, int*);
@@ -20,26 +21,23 @@ public:
 	bool operator!=(const Polynomial&) const;
 
 	Polynomial& operator+=(const Polynomial&);
-	Polynomial operator+(const Polynomial&) const;
 	Polynomial& operator-=(const Polynomial&);
-	Polynomial operator-(const Polynomial&) const;
-
 	Polynomial& operator*=(const int);
+	Polynomial& operator*=(const Polynomial&);
+	Polynomial& operator/=(const int);
+
+	Polynomial operator+(const Polynomial&) const;
+	Polynomial operator-(const Polynomial&) const;
 	Polynomial operator*(const int) const;
 	friend Polynomial operator*(const int, const Polynomial);
-	//todo const int -> int
-	Polynomial& operator/=(const int);
-	Polynomial operator/(const int) const;
-
-	Polynomial& operator*=(const Polynomial&);
 	Polynomial operator*(const Polynomial&) const;
-
+	Polynomial operator/(const int) const;
 
 	int& operator[](const int);
 	int operator[](const int) const;
 
-	//todo const&
-	friend Polynomial operator-(Polynomial);
+	//fixed const&
+	friend Polynomial operator-(const Polynomial&);
 
 	friend std::stringstream& operator<<(std::stringstream&, const Polynomial&);
 	friend std::ifstream& operator>>(std::ifstream&, Polynomial&);
