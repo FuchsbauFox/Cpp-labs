@@ -10,6 +10,7 @@ int main() {
     std::ofstream fout("output.txt");
 
     pugi::xml_document main_file;
+    //todo full path, rly?
     pugi::xml_parse_result result = main_file.load_file("C:/Users/vovas/source/repos/OOP/homework3/homework3/data.xml");
     if (!result)
         return -1;

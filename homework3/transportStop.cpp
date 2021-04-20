@@ -14,6 +14,7 @@ double myStod(const std::string& valueAsString) {
 transportStop::transportStop() {}
 
 transportStop::~transportStop() {
+	//todo u can use default constructor
 	stops.clear();
 	differentTransport.clear();
 }
@@ -84,6 +85,7 @@ void transportStop::leastStopRoute(std::ofstream& fout) {
 			if (itStop->type_of_vehicle == differentTransport[i])
 				thisType = i;
 		}
+		//todo range-based for (for (auto& : routes))
 		for (auto itRout = itStop->routes.begin(); itRout != itStop->routes.end(); ++itRout) {
 			if (thisType == -1)
 				exit(1);
