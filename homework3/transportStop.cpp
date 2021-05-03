@@ -11,13 +11,8 @@ double myStod(const std::string& valueAsString) {
 	totalSString >> valueAsDouble;
 	return valueAsDouble;
 }
-transportStop::transportStop() {}
-
-transportStop::~transportStop() {
-	//todo u can use default constructor
-	stops.clear();
-	differentTransport.clear();
-}
+	
+//fixed u can use default constructor
 
 void transportStop::setStop(std::string num, std::string type, std::string loc, std::string rout, std::string coord) {
 	stops.resize(stops.size() + 1);
@@ -85,17 +80,17 @@ void transportStop::leastStopRoute(std::ofstream& fout) {
 			if (itStop->type_of_vehicle == differentTransport[i])
 				thisType = i;
 		}
-		//todo range-based for (for (auto& : routes))
-		for (auto itRout = itStop->routes.begin(); itRout != itStop->routes.end(); ++itRout) {
+		//fixed range-based for (for (auto& : routes))
+		for (auto& itRout : itStop->routes){
 			if (thisType == -1)
 				exit(1);
-			if (route[thisType].count(*itRout) == 0)
-				route[thisType][*itRout] = 1;
+			if (route[thisType].count(itRout) == 0)
+				route[thisType][itRout] = 1;
 			else
-				route[thisType][*itRout]++;
+				route[thisType][itRout]++;
 
-			if (answer[thisType] == "" || route[thisType][answer[thisType]] < route[thisType][*itRout])
-				answer[thisType] = *itRout;
+			if (answer[thisType] == "" || route[thisType][answer[thisType]] < route[thisType][itRout])
+				answer[thisType] = itRout;
 		}
 	}
 
