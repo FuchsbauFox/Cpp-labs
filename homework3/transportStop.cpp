@@ -41,6 +41,7 @@ void transportStop::setStop(std::string num, std::string type, std::string loc, 
 		}
 	}
 
+	//todo range based for
 	for (auto it = rout.begin(); it != rout.end(); ++it) {
 		str += *it;
 		if (it + 1 == rout.end() || *(it + 1) == ',' || *(it + 1) == '.') {
@@ -112,6 +113,7 @@ void transportStop::longestRoute(std::ofstream& fout) {
 			if (itStop->type_of_vehicle == differentTransport[i])
 				thisType = i;
 		}
+		//todo range-based for
 		for (auto itRoute = itStop->routes.begin(); itRoute != itStop->routes.end(); ++itRoute) {
 			if (thisType == -1)
 				exit(1);
@@ -121,6 +123,7 @@ void transportStop::longestRoute(std::ofstream& fout) {
 				route[thisType][*itRoute].length = 0;
 			}
 			else {
+				//todo find another ones range-based fors yourself
 				double x = route[thisType][*itRoute].prevCoordinates[0];
 				double y = route[thisType][*itRoute].prevCoordinates[1];
 				route[thisType][*itRoute].length += sqrt(pow((x - itStop->coordinates[0]), 2) + pow((y - itStop->coordinates[1]), 2));
