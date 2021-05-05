@@ -5,7 +5,7 @@
 #include <string>
 #include <fstream>
 
-//todo where is transportStop.h?
+//fixed where is transportStop.h?
 int main() {
 
     std::ofstream fout("output.txt");

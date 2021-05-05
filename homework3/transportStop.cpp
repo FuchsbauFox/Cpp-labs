@@ -23,48 +23,46 @@ void transportStop::setStop(std::string num, std::string type, std::string loc, 
 	if (differentTransport.empty())
 		differentTransport.push_back(type);
 	else {
-		for (auto it = differentTransport.begin(); it != differentTransport.end(); ++it)
-			if (*it == type)
+		for (auto& it : differentTransport)
+			if (it == type)
 				notInDefferent = false;
 		if (notInDefferent)
 			differentTransport.push_back(type);
 	}
 
 	std::string str = "";
-	for (auto it = loc.begin(); it != loc.end(); ++it) {
-		str += *it;
-		if (it + 1 == loc.end() || *(it + 1) == ',') {
+	for (auto& iLoc : loc) {
+		if (iLoc == ',' || (iLoc == ' ' && *(&iLoc - 1) == ','))
+			continue;
+		str += iLoc;
+		if (*(&iLoc + 1) == '\0' || *(&iLoc + 1) == ',') {
 			stops[stops.size() - 1].location.push_back(str);
 			str = "";
-			if (it + 1 != loc.end())
-				it += 2;
 		}
 	}
 
-	//todo range based for
-	for (auto it = rout.begin(); it != rout.end(); ++it) {
-		str += *it;
-		if (it + 1 == rout.end() || *(it + 1) == ',' || *(it + 1) == '.') {
+	//fixed range based for
+	for (auto& iRout : rout) {
+		if (iRout == ',' || iRout == '.')
+			continue;
+		str += iRout;
+		if (*(&iRout + 1) == '\0' || *(&iRout + 1) == ',' || *(&iRout + 1) == '.') {
 			stops[stops.size() - 1].routes.push_back(str);
 			str = "";
-			if (it + 1 != rout.end())
-				it++;
 		}
 	}
 
-	for (auto it = coord.begin(); it != coord.end(); ++it) {
-
-		
-		str += *it;
-		
-		if (it + 1 == coord.end()) {
+	for (auto& iCoord : coord) {
+		if (iCoord == ',')
+			continue;
+		str += iCoord;
+		if (*(&iCoord + 1) == '\0') {
 			stops[stops.size() - 1].coordinates[1] = myStod(str);
 			str = "";
 		}
-		else if (*(it + 1) == ',') {
+		else if (*(&iCoord + 1) == ',') {
 			stops[stops.size() - 1].coordinates[0] = myStod(str);
 			str = "";
-			++it;
 		}
 	}
 }
@@ -82,16 +80,16 @@ void transportStop::leastStopRoute(std::ofstream& fout) {
 				thisType = i;
 		}
 		//fixed range-based for (for (auto& : routes))
-		for (auto& itRout : itStop->routes){
+		for (auto& iRout : itStop->routes){
 			if (thisType == -1)
 				exit(1);
-			if (route[thisType].count(itRout) == 0)
-				route[thisType][itRout] = 1;
+			if (route[thisType].count(iRout) == 0)
+				route[thisType][iRout] = 1;
 			else
-				route[thisType][itRout]++;
+				route[thisType][iRout]++;
 
-			if (answer[thisType] == "" || route[thisType][answer[thisType]] < route[thisType][itRout])
-				answer[thisType] = itRout;
+			if (answer[thisType] == "" || route[thisType][answer[thisType]] < route[thisType][iRout])
+				answer[thisType] = iRout;
 		}
 	}
 
@@ -113,26 +111,26 @@ void transportStop::longestRoute(std::ofstream& fout) {
 			if (itStop->type_of_vehicle == differentTransport[i])
 				thisType = i;
 		}
-		//todo range-based for
-		for (auto itRoute = itStop->routes.begin(); itRoute != itStop->routes.end(); ++itRoute) {
+		//fixed range-based for
+		for (auto& iRoute : itStop->routes) {
 			if (thisType == -1)
 				exit(1);
-			if (route[thisType].count(*itRoute) == 0) {
-				route[thisType][*itRoute].prevCoordinates[0] = itStop->coordinates[0];
-				route[thisType][*itRoute].prevCoordinates[1] = itStop->coordinates[1];
-				route[thisType][*itRoute].length = 0;
+			if (route[thisType].count(iRoute) == 0) {
+				route[thisType][iRoute].prevCoordinates[0] = itStop->coordinates[0];
+				route[thisType][iRoute].prevCoordinates[1] = itStop->coordinates[1];
+				route[thisType][iRoute].length = 0;
 			}
 			else {
-				//todo find another ones range-based fors yourself
-				double x = route[thisType][*itRoute].prevCoordinates[0];
-				double y = route[thisType][*itRoute].prevCoordinates[1];
-				route[thisType][*itRoute].length += sqrt(pow((x - itStop->coordinates[0]), 2) + pow((y - itStop->coordinates[1]), 2));
-				route[thisType][*itRoute].prevCoordinates[0] = itStop->coordinates[0];
-				route[thisType][*itRoute].prevCoordinates[1] = itStop->coordinates[1];
+				//fixed find another ones range-based fors yourself
+				double x = route[thisType][iRoute].prevCoordinates[0];
+				double y = route[thisType][iRoute].prevCoordinates[1];
+				route[thisType][iRoute].length += sqrt(pow((x - itStop->coordinates[0]), 2) + pow((y - itStop->coordinates[1]), 2));
+				route[thisType][iRoute].prevCoordinates[0] = itStop->coordinates[0];
+				route[thisType][iRoute].prevCoordinates[1] = itStop->coordinates[1];
 			}
 
-			if (answer[thisType] == "" || route[thisType][answer[thisType]].length < route[thisType][*itRoute].length)
-				answer[thisType] = *itRoute;
+			if (answer[thisType] == "" || route[thisType][answer[thisType]].length < route[thisType][iRoute].length)
+				answer[thisType] = iRoute;
 		}
 	}
 
@@ -147,13 +145,23 @@ void transportStop::streetMostStops(std::ofstream& fout) {
 	
 	std::string streetMaxStops;
 	for (auto itStop = stops.begin(); itStop != stops.end(); ++itStop) {
-		for (auto itLoc = itStop->location.begin(); itLoc != itStop->location.end(); ++itLoc) {
-			if (stopsOnStreet.count(*itLoc) == 0)
-				stopsOnStreet[*itLoc] = 1;
+
+		//for (auto itLoc = itStop->location.begin(); itLoc != itStop->location.end(); ++itLoc) {
+		//	if (stopsOnStreet.count(*itLoc) == 0)
+		//		stopsOnStreet[*itLoc] = 1;
+		//	else
+		//		stopsOnStreet[*itLoc]++;
+		//	if (streetMaxStops == "" || stopsOnStreet[*itLoc] > stopsOnStreet[streetMaxStops])
+		//		streetMaxStops = *itLoc;
+		//}
+
+		for (auto& itLoc : itStop->location) {
+			if (stopsOnStreet.count(itLoc) == 0)
+				stopsOnStreet[itLoc] = 1;
 			else
-				stopsOnStreet[*itLoc]++;
-			if (streetMaxStops == "" || stopsOnStreet[*itLoc] > stopsOnStreet[streetMaxStops])
-				streetMaxStops = *itLoc;
+				stopsOnStreet[itLoc]++;
+			if (streetMaxStops == "" || stopsOnStreet[itLoc] > stopsOnStreet[streetMaxStops])
+				streetMaxStops = itLoc;
 		}
 	}
 
