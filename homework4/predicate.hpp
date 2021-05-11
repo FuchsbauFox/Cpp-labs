@@ -2,7 +2,7 @@
 #define PREDICATE_H
 
 #include <iostream>
-
+//todo T is a bad name for iterator type
 template<class T, class Func>
 bool allOf(const T& itBegin, const T& itEnd, Func func) {
 	for (auto it = itBegin; it != itEnd; ++it) {
