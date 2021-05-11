@@ -2,9 +2,9 @@
 #define PREDICATE_H
 
 #include <iostream>
-//todo T is a bad name for iterator type
-template<class T, class Func>
-bool allOf(const T& itBegin, const T& itEnd, Func func) {
+//fixed T is a bad name for iterator type
+template<class Iterator, class Func>
+bool allOf(const Iterator& itBegin, const Iterator& itEnd, Func func) {
 	for (auto it = itBegin; it != itEnd; ++it) {
 		if (!func(*it))
 			return false;
@@ -12,8 +12,8 @@ bool allOf(const T& itBegin, const T& itEnd, Func func) {
 	return true;
 }
 
-template<class T, class Func>
-bool anyOf(const T& itBegin, const T& itEnd, Func func) {
+template<class Iterator, class Func>
+bool anyOf(const Iterator& itBegin, const Iterator& itEnd, Func func) {
 	for (auto it = itBegin; it != itEnd; ++it) {
 		if (func(*it))
 			return true;
@@ -21,13 +21,13 @@ bool anyOf(const T& itBegin, const T& itEnd, Func func) {
 	return false;
 }
 
-template<class T, class Func>
-bool noneOf(const T& itBegin, const T& itEnd, Func func) {
+template<class Iterator, class Func>
+bool noneOf(const Iterator& itBegin, const Iterator& itEnd, Func func) {
 	return !anyOf(itBegin, itEnd, func);
 }
 
-template<class T, class Func>
-bool oneOf(const T& itBegin, const T& itEnd, Func func) {
+template<class Iterator, class Func>
+bool oneOf(const Iterator& itBegin, const Iterator& itEnd, Func func) {
 	bool answer = false;
 	for (auto it = itBegin; it != itEnd; ++it) {
 		if (func(*it) && !answer)
@@ -38,8 +38,8 @@ bool oneOf(const T& itBegin, const T& itEnd, Func func) {
 	return answer;
 }
 
-template<class T, class Func = std::less<>>
-bool isSorted(const T& itBegin, const T& itEnd, Func func = Func()) {
+template<class Iterator, class Func = std::less<>>
+bool isSorted(const Iterator& itBegin, const Iterator& itEnd, Func func = Func()) {
 	for (auto it = itBegin + 1; it != itEnd; ++it) {
 		if (!func(*(it - 1), *it))
 			return false;
@@ -47,8 +47,8 @@ bool isSorted(const T& itBegin, const T& itEnd, Func func = Func()) {
 	return true;
 }
 
-template<class T, class Func>
-bool isPartitioned(const T& itBegin, const T& itEnd, Func func = Func()) {
+template<class Iterator, class Func>
+bool isPartitioned(const Iterator& itBegin, const Iterator& itEnd, Func func = Func()) {
 	bool div = false;
 	for (auto it = itBegin + 1; it != itEnd; ++it) {
 		if ((func(*(it - 1)) && !func(*it)) || (!func(*(it - 1)) && func(*it))) {
@@ -60,8 +60,8 @@ bool isPartitioned(const T& itBegin, const T& itEnd, Func func = Func()) {
 	return true;
 }
 
-template<class T>
-T findNot(const T& itBegin, const T& itEnd, int value) {
+template<class Iterator>
+Iterator findNot(const Iterator& itBegin, const Iterator& itEnd, int value) {
 	for (auto it = itBegin + 1; it != itEnd; ++it) {
 		if (*it != value)
 			return it;
@@ -69,8 +69,8 @@ T findNot(const T& itBegin, const T& itEnd, int value) {
 	return itEnd;
 }
 
-template<class T>
-T findBackward(const T& itBegin, const T& itEnd, int value) {
+template<class Iterator>
+Iterator findBackward(const Iterator& itBegin, const Iterator& itEnd, int value) {
 	auto answer = itEnd;
 	for (auto it = itBegin; it != itEnd; it++) {
 		if (*it == value)
@@ -79,8 +79,8 @@ T findBackward(const T& itBegin, const T& itEnd, int value) {
 	return answer;
 }
 
-template<class T, class Func>
-bool isPalindrome(T itBegin, T itEnd, Func func) {
+template<class Iterator, class Func>
+bool isPalindrome(Iterator itBegin, Iterator itEnd, Func func) {
 
 	itEnd--;
 	while (itBegin != itEnd) {
