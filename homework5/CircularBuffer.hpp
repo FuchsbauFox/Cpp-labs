@@ -36,52 +36,11 @@ public:
         _last = &_data[1];
     }
 
-    //
-//    CircularBuffer(const CircularBuffer& otherObj)
-//            : _size(otherObj._size),
-//              writeCount(otherObj.writeCount),
-//              firstPosition(otherObj.firstPosition)
-//    {
-//        _data = new T[_size];
-//        for (int i = 0; i < _size; ++i) {
-//            _data[i] = otherObj._data[i];
-//            if (otherObj._first == &otherObj._data[i])
-//                _first = &_data[i];
-//            if (otherObj._last == &otherObj._data[i])
-//                _last = &_data[i];
-//        }
-//    }
-
     ~CircularBuffer() {
         _first = nullptr;
         _last = nullptr;
-        delete _first;
-        delete _last;
         delete[] _data;
     }
-
-    //
-//    CircularBuffer& operator=(const CircularBuffer& otherObj) {
-//        if (&otherObj != this) {
-//            _size = otherObj._size;
-//            writeCount = otherObj.writeCount;
-//            firstPosition = otherObj.firstPosition;
-//
-//            _first = nullptr;
-//            _last = nullptr;
-//            delete[] _data;
-//            _data = new T[_size];
-//
-//            for (int i = 0; i < _size; ++i) {
-//                _data[i] = otherObj._data[i];
-//                if (otherObj._first == &otherObj._data[i])
-//                    _first = &_data[i];
-//                if (otherObj._last == &otherObj._data[i])
-//                    _last = &_data[i];
-//            }
-//        }
-//        return *this;
-//    }
 
     void addFirst(T newElement) {
         if (writeCount != 0)
@@ -114,27 +73,33 @@ public:
     T last() {
         if (writeCount == 0)
             throw std::runtime_error("The buffer is empty");
-        return *PointerDecrease(_last);                                 //
+        return *PointerDecrease(_last);
     }
 
     void delFirst() {
-        if (_first != PointerDecrease(_last))                            //
+        if (_first != PointerDecrease(_last))
             _first = PointerIncrease(_first, true);
         writeCount--;
     }
 
     void delLast() {
-        if (_first != PointerDecrease(_last))                                       //
+        if (_first != PointerDecrease(_last))
             _last = PointerDecrease(_last);
         writeCount--;
     }
 
-    //todo size and index information in exception
+    //fixed size and index information in exception
     T& operator[](const int position) {
-        if (position < 0 || position > _size)
-            throw std::runtime_error("\nOut of range\n");
-        else if (position > writeCount - 1)
-            throw std::runtime_error("\nThe buffer has not yet been filled up to this element\n");
+        stringstream ss;
+        if (position < 0 || position > _size) {
+            ss << "\nOut of range (buffer size: " << _size << " / requested index: " << position << ")\n";
+            throw std::runtime_error(ss.str());
+        }
+        else if (position > writeCount - 1) {
+            ss << "\nThe buffer has not been filled up to this element (items in the buffer: " << writeCount << " / requested index: " << position << "). ";
+            writeCount != 0 ? ss << "Maximum index: " << writeCount - 1 : ss << "The buffer is empty\n";
+            throw std::runtime_error(ss.str());
+        }
         return _data[(firstPosition + position) % (_size + 1)];
     }
 
@@ -146,7 +111,6 @@ public:
         return _data[(firstPosition + position) % (_size + 1)];
     }
 
-    //
     void changeCapacity(int newSize) {
 
         T* prevData = new T[_size + 1];
