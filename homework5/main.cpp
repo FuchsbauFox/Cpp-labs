@@ -17,11 +17,11 @@ using namespace std;
 #ifndef DEBUG
 #define cerr cerr1
 #define endl '\n'
-struct emptyClass {                                                                               //remove cerr in release (it works fast also)
+struct emptyClass{                                                                               //remove cerr in release (it works fast also)
 };                                                                                               //don't use with functions (compiler doesn't know if function changes state of variables)
                                                                                                  //                         (it still doesn't print but functions run)
 template <class T>
-emptyClass& operator<<(emptyClass& cl, const T& t) {
+emptyClass& operator<<(emptyClass& cl, const T& t){
     return cl;
 }
 
@@ -42,7 +42,7 @@ emptyClass cerr;
 
 #ifdef DEBUG                                                                                     //check vector range in debug
 template <class T>
-struct vector1 : public vector<T> {
+struct vector1 : public vector<T>{
     using vector<T>::vector;
     decltype(auto) operator[](size_t t) {
         return (*this).at(t);
@@ -58,12 +58,12 @@ int depth = 0;
 int maxDepth = 0;
 
 
-ostream& operator<<(ostream& out, const CircularBuffer<int>& a) {
+ostream& operator<<(ostream& out, const CircularBuffer<int>& a){
     depth++;
     int myDepth = depth;
     maxDepth = max(maxDepth, depth);
-    for (auto iter = a.begin(); iter != a.end(); ++iter) {
-        if (iter != a.begin()) {
+    for (auto iter = a.begin(); iter != a.end(); ++iter){
+        if (iter != a.begin()){
             if (maxDepth - myDepth == 0)
                 out << " ";
             else
@@ -73,7 +73,7 @@ ostream& operator<<(ostream& out, const CircularBuffer<int>& a) {
         auto el = *iter;
         out << el;
     }
-    if (myDepth == 1) {
+    if (myDepth == 1){
         out << endl;
     }
     depth--;
@@ -86,29 +86,29 @@ ostream& operator<<(ostream& out, const CircularBuffer<int>& a) {
 template<class Ch, class Tr, class... Args>                                                      //cout tuple
 auto& operator<<(std::basic_ostream<Ch, Tr>& os, std::tuple<Args...> const& t) {
     maxDepth = max(depth + 1, maxDepth);
-    std::apply([&os](auto&&... args) {((os << args << " "), ...); }, t);
+    std::apply([&os](auto&&... args) {((os << args << " "), ...);}, t);
     return os;
 }
 
 template<class T, class U>                                                                       //cout pair
-ostream& operator<<(ostream& out, const pair<T, U>& p) {
+ostream& operator<<(ostream& out, const pair<T, U>& p){
     maxDepth = max(depth + 1, maxDepth);
     return (out << p.first << " " << p.second);
 }
 
 template<class T>                                                                                //cin vector (any dimension)
-istream& operator>>(istream& in, vector<T>& v) {
-    for (auto& e : v) {
+istream& operator>>(istream& in, vector<T>& v){
+    for (auto& e : v){
         in >> e;
     }
     return in;
 }
 
 template<class T>                                                                                //two-dimensional array for more comfortable constructor
-struct matrix : public vector<vector<T>> {
+struct matrix : public vector<vector<T>>{
     using vector<vector<T>>::vector;
-    matrix(size_t n = 0, size_t m = 0, T el = T()) : vector<vector<T>>(n, vector<T>(m, el)) {};
-    void resize(size_t n, size_t m, T el = T()) {
+    matrix (size_t n = 0, size_t m = 0, T el = T()) : vector<vector<T>>(n, vector<T>(m, el)){};
+    void resize(size_t n, size_t m, T el = T()){
         vector<vector<T>>::resize(n, vector<T>(m, el));
     }
 };
@@ -116,13 +116,13 @@ struct matrix : public vector<vector<T>> {
 stringstream ss;
 
 
-template <auto& out = cout, typename T>                                                         //function that prints any values with space delimeter
+template <auto& out=cout, typename T>                                                         //function that prints any values with space delimeter
 void print(const T& t)                                                                           //and make endl in the end (but it doesn't even matter)
 {                                                                                                //e.g print(1, "plus", 2, '=', 3);
     out << t << endl;                                                                            //1 plus 2 = 3
 }                                                                                                //use template for another ostream
 //e.g. print<cerr>("I am here")
-template<auto& out = cout, class T, class... Args>
+template<auto& out=cout, class T, class... Args>
 void print(const T& el, Args... args)
 {
     out << el << " ";
@@ -141,11 +141,11 @@ bool assertPrint(const P& pred, Args&&... args) {
 }
 
 void checkConstOperator(const CircularBuffer<int>& cb) {
-    print(cb[2]);
+	print(cb[2]);
 }
 
 
-int main() {
+int main(){
     cin.tie(NULL);
     ios_base::sync_with_stdio(false);
     CircularBuffer<int> c(4);
@@ -174,7 +174,7 @@ int main() {
     c.addFirst(3);
     c.addFirst(4);
     checkConstOperator(c);
-    try {
+	try {
         c[4] = 1;
         throw "out of range";
     }
@@ -188,7 +188,7 @@ int main() {
     print<ss>(c);
     c.addFirst(6);
     print<ss>(c);
-    sort(c.begin(), c.end());
+	sort(c.begin(), c.end());
     print<ss>(c);
     callAssert(equal_to<>(), ss.str(), "4 3 2 1\n"
                                        "\n"
@@ -201,7 +201,7 @@ int main() {
                                        "2 3 4 5 6\n"
                                        "\n");
     CircularBuffer<string> cs(4);
-    cs.addFirst("First");
+    cs.addFirst("First");	
     print(cs[0]);
     print("Everything is ok");
 }

@@ -129,6 +129,7 @@ public:
         writeCount--;
     }
 
+    //todo size and index information in exception
     T& operator[](const int position) {
         if (position < 0 || position > _size)
             throw std::runtime_error("\nOut of range\n");
