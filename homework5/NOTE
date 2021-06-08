@@ -1,0 +1,31 @@
+Pulling https://github.com/FuchsbauFox/IS-2020-prog-2-sem/homework5
+Pull finished
+It's compiled
+It's failed with return code 3
+4 3 2 1
+
+5 4 3 2
+
+5 4 3 2
+
+6 5 4 3 2
+
+3 4 4 5 6
+
+ 4 3 2 1
+
+5 4 3 2
+
+5 4 3 2
+
+6 5 4 3 2
+
+2 3 4 5 6
+
+
+Assertion failed: assertPrint(equal_to<>(), ss.str(), "4 3 2 1\n" "\n" "5 4 3 2\n" "\n" "5 4 3 2\n" "\n" "6 5 4 3 2\n" "\n" "2 3 4 5 6\n" "\n"), file main.cpp, line 193
+
+No warnings
+Push comments was succesfull
+
+
