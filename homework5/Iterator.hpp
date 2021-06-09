@@ -11,8 +11,8 @@ template<class T>
 class Iterator {
 private:
     T* _begin;
-    int _currentPos;
     int _position;
+    int _currentPos;
     int _size;
 
 public:
@@ -23,18 +23,31 @@ public:
     using reference = value_type&;
 
     Iterator(T* begin, int firstPos, int curentPos, int size)
-            : _begin(begin), _currentPos(curentPos), _position(firstPos), _size(size) {}
+            : _begin(begin), _position(firstPos), _currentPos(curentPos), _size(size) {}
 
-    T& operator*() const { return *(_begin + (_position + _currentPos) % _size); }
-    T* operator->() const { return _begin + (_position + _currentPos) % _size; }
-    T& operator[](difference_type n) const { return *(_begin + (_position + _currentPos + n) % _size); }
+    T& operator*() const {
+        return _begin[(_position + _currentPos) % _size];
+    }
+    T* operator->() {
+        return _begin + (_position + _currentPos) % _size;
+    }
+    T& operator[](difference_type n) {
+        return _begin[(_position + n) % _size];
+    }
+
+    Iterator<T>& operator=(const Iterator<T>& other) {
+        if (&other != this) {
+            _currentPos = other._currentPos;
+        }
+        return *this;
+    }
 
     Iterator<T>& operator++() {
-        _currentPos++;
+        ++_currentPos;
         return *this;
     }
     Iterator<T>& operator--() {
-        _currentPos--;
+        --_currentPos;
         return *this;
     }
 
@@ -48,16 +61,12 @@ public:
         return *this;
     }
 
-    Iterator<T> operator+(difference_type n) const {
-        Iterator<T> outIt = *this;
-        outIt._currentPos += n;
-        return outIt;
+    Iterator<T> operator+(difference_type n) {
+        return Iterator<T>(_begin, _position, _currentPos + n, _size);
     }
 
-    Iterator<T> operator-(difference_type n) const {
-        Iterator<T> outIt = *this;
-        outIt._currentPos -= n;
-        return outIt;
+    Iterator<T> operator-(difference_type n) {
+        return Iterator<T>(_begin, _position, _currentPos - n, _size);
     }
 
     friend Iterator<T> operator+(difference_type n, const Iterator<T>& otherIt) {
@@ -76,27 +85,31 @@ public:
     }
 
     bool operator==(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size == otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos == otherIt._currentPos;
     }
     bool operator!=(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size != otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos != otherIt._currentPos;
     }
     bool operator>(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size > otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos > otherIt._currentPos;
     }
     bool operator<(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size < otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos < otherIt._currentPos;
     }
     bool operator>=(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size >= otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos >= otherIt._currentPos;
     }
     bool operator<=(const Iterator<T>& otherIt) const {
-        return _begin + (_position + _currentPos) % _size <= otherIt._begin + (otherIt._position + otherIt._currentPos) % otherIt._size;
+        return _currentPos <= otherIt._currentPos;
     }
 
     friend ostream& operator<< (ostream& fout, const Iterator<T>& it) {
         fout << it._begin + (it._position + it._currentPos) % it._size;
         return fout;
+    }
+
+    difference_type operator-(const Iterator<T>& other){
+        return _currentPos - other._currentPos;
     }
 };
 

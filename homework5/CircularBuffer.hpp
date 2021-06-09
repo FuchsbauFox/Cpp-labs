@@ -89,26 +89,30 @@ public:
     }
 
     //fixed size and index information in exception
-    T& operator[](const int position) {
-        stringstream ss;
-        if (position < 0 || position > _size) {
-            ss << "\nOut of range (buffer size: " << _size << " / requested index: " << position << ")\n";
-            throw std::runtime_error(ss.str());
+    T& operator[](const int pos) {
+        if (pos < 0 || pos > _size) {
+            std::cout << "Out of range (buffer size: " << _size << " / requested index: " << pos << ")\n";
+            throw out_of_range("out of range");
         }
-        else if (position > writeCount - 1) {
-            ss << "\nThe buffer has not been filled up to this element (items in the buffer: " << writeCount << " / requested index: " << position << "). ";
-            writeCount != 0 ? ss << "Maximum index: " << writeCount - 1 : ss << "The buffer is empty\n";
-            throw std::runtime_error(ss.str());
+        else if (pos > writeCount - 1) {
+            std::cout << "The buffer has not been filled up to this element (items in the buffer: " << writeCount << " / requested index: " << pos << "). ";
+            writeCount != 0 ? std::cout  << "Maximum index: " << writeCount - 1 << '\n' : std::cout  << "The buffer is empty\n";
+            throw out_of_range("out of range");
         }
-        return _data[(firstPosition + position) % (_size + 1)];
+        return _data[(firstPosition + pos) % (_size + 1)];
     }
 
-    T operator[](const int position) const {
-        if (position < 0 || position > _size)
-            throw std::runtime_error("\nOut of range\n");
-        else if (position > writeCount - 1)
-            throw std::runtime_error("\nThe buffer has not yet been filled up to this element\n");
-        return _data[(firstPosition + position) % (_size + 1)];
+    T operator[](const int pos) const {
+        if (pos < 0 || pos > _size) {
+            std::cout << "Out of range (buffer size: " << _size << " / requested index: " << pos << ")\n";
+            throw out_of_range("out of range");
+        }
+        else if (pos > writeCount - 1) {
+            std::cout << "The buffer has not been filled up to this element (items in the buffer: " << writeCount << " / requested index: " << pos << "). ";
+            writeCount != 0 ? std::cout  << "Maximum index: " << writeCount - 1 : std::cout  << "The buffer is empty\n";
+            throw out_of_range("out of range");
+        }
+        return _data[(firstPosition + pos) % (_size + 1)];
     }
 
     void changeCapacity(int newSize) {
@@ -149,7 +153,8 @@ public:
     void print(){
         for (int i = 0; i < _size + 1; i++)
             std::cout << _data[i] << ' ';
-        std::cout << "\n---------\n";
+        std::cout << "\n" << *_first << *_last << "\n---------\n";
+
     }
 
 };
